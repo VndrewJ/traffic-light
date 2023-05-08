@@ -1,2 +1,4 @@
 # MECHENG_313_A2
-test
+
+Andrew Koh      akoh751
+Joe Kim         xxxxxxx
