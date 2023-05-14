@@ -7,55 +7,59 @@ namespace MECHENG_313_A2.Tasks
 {
     public class FiniteStateMachine : IFiniteStateMachine
     {
-        /*Pseudocode for table
-         * initialise delegates
-         * ????
-         * 
-         * initialise dictionary variables
-         * String currentState, nextState
-         * 
-         * initialise double-nested dict
-         * var FST = new Dictionary<current state, Dictionary<next state, action delegate>>();
-         * 
-         * Add current state entry
-         * FST.Add("State A", new Dictionary<next state, action delegate>());
-         * 
-         * Add next state + action entry in nested dictionary
-         * data["State A"].Add("State B", action);
-         * 
-         * Repeat for other states
-         * FST.Add("State B", new Dictionary<next state, action delegate>());
-         * data["State B"].Add("State C", action);
-         *
-         * repeat...
-         */
+        //Setup........//
 
+        //Intitialise action delegates (a and b)
+        public static void a(DateTime timestamp) { return; }
+        public static void b(DateTime timestamp) { return; }
+        static TimestampedAction actionA = a;
+        static TimestampedAction actionB = b;
+
+        //create nested dictionary for FST 
+        public Dictionary<string, Dictionary<string, TimestampedAction>> fst =
+            new Dictionary<string, Dictionary<string, TimestampedAction>>
+            {   
+                //State G 
+                {"G", new Dictionary<string, TimestampedAction>{{"Y", actionA}}},
+                //State Y
+                {"Y", new Dictionary<string, TimestampedAction>{{"R", actionA}}},
+                //State R
+                {"R", new Dictionary<string, TimestampedAction>{{"G", actionA},{"Y'", actionB}}},
+                //State Y'
+                {"Y'", new Dictionary<string, TimestampedAction>{{"B", actionA},{"R", actionB}}},
+                //State B
+                {"B", new Dictionary<string, TimestampedAction>{{"Y'", actionA},{"R", actionB}}}
+            };
+
+        //Initialise current state varible
+        string currentState = "G";
+
+        //--------------------------------------------------------------------------------------//
 
         public void AddAction(string state, string eventTrigger, TimestampedAction action)
         {
-            // TODO: Implement this
+           // TODO: Implement this - Andrew 
         }
 
         public string GetCurrentState()
         {
-            // TODO: Implement this
-            return null;
+            return currentState;
         }
 
         public string ProcessEvent(string eventTrigger)
         {
-            // TODO: Implement this
+            // TODO: Implement this - Andrew 
             return null;
         }
 
         public void SetCurrentState(string state)
         {
-            // TODO: Implement this
+            currentState = state;
         }
 
         public void SetNextState(string state, string nextState, string eventTrigger)
         {
-            // TODO: Implement this
+            // TODO: Implement this - Joe 
         }
     }
 }
