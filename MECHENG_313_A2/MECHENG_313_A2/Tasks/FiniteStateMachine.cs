@@ -7,12 +7,10 @@ namespace MECHENG_313_A2.Tasks
 {
     public class FiniteStateMachine : IFiniteStateMachine
     {
-        //Setup........//
-
         // create nested dictionary for FST 
         // First string for current event 
         // second string for event trigger 
-        // event for next state and a list of actions 
+        // object for next state and a list of actions 
         public Dictionary<string, Dictionary<string, nextEventAction>> fst; 
         
         //Declare current state varible
@@ -30,7 +28,7 @@ namespace MECHENG_313_A2.Tasks
            //Look for the current state and event trigger 
             if (fst.ContainsKey(state) && fst[state].ContainsKey(eventTrigger))
             {   
-                //set the next state
+                //set the next action
                 fst[state][eventTrigger].actionAdd(action);
             }
         }
@@ -42,7 +40,9 @@ namespace MECHENG_313_A2.Tasks
 
         public string ProcessEvent(string eventTrigger)
         {
-            //wtf 
+            /*processes an event, performs actions associated with it in parallel,
+            and returns the next state*/
+
             return null;
         }
 
