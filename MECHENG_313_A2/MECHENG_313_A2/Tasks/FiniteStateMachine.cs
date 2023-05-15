@@ -9,10 +9,6 @@ namespace MECHENG_313_A2.Tasks
     {
         //Setup........//
 
-        /*
-            double dictionary <current state, event trigger, object(next state, action)
-            
-        */
 
         // //Intitialise action delegates (a and b)
         // public static void a(DateTime timestamp) { return; }
@@ -21,29 +17,37 @@ namespace MECHENG_313_A2.Tasks
         // static TimestampedAction actionB = b;
 
         //create nested dictionary for FST 
-        public Dictionary<string, Dictionary<string, ...>> fst =
-            new Dictionary<string, Dictionary<string, ...>>
-            {   
-                // //State G 
-                // {"G", new Dictionary<string, TimestampedAction>{{"Y", actionA}}},
-                // //State Y
-                // {"Y", new Dictionary<string, TimestampedAction>{{"R", actionA}}},
-                // //State R
-                // {"R", new Dictionary<string, TimestampedAction>{{"G", actionA},{"Y'", actionB}}},
-                // //State Y'
-                // {"Y'", new Dictionary<string, TimestampedAction>{{"B", actionA},{"R", actionB}}},
-                // //State B
-                // {"B", new Dictionary<string, TimestampedAction>{{"Y'", actionA},{"R", actionB}}}
-            };
+        // public Dictionary<string, Dictionary<string, ...>> fst =
+        //     new Dictionary<string, Dictionary<string, ...>>
+        //     {   
+        //         // //State G 
+        //         // {"G", new Dictionary<string, TimestampedAction>{{"Y", actionA}}},
+        //         // //State Y
+        //         // {"Y", new Dictionary<string, TimestampedAction>{{"R", actionA}}},
+        //         // //State R
+        //         // {"R", new Dictionary<string, TimestampedAction>{{"G", actionA},{"Y'", actionB}}},
+        //         // //State Y'
+        //         // {"Y'", new Dictionary<string, TimestampedAction>{{"B", actionA},{"R", actionB}}},
+        //         // //State B
+        //         // {"B", new Dictionary<string, TimestampedAction>{{"Y'", actionA},{"R", actionB}}}
+        //     };
 
-        //Initialise current state varible
-        string currentState = "G";
+        //Initialise varibles
+        string currentState;
+
+
+        //initialise FST
+        //current state, event trigger, eventHandler struct(next state, action list)
+        public Dictionary<string, Dictionary<string, EventHandler>> finiteStateTable = 
+        new Dictionary<string, Dictionary<string, EventHandler>>();
+
 
         //--------------------------------------------------------------------------------------//
 
         public void AddAction(string state, string eventTrigger, TimestampedAction action)
         {
            // TODO: Implement this - Andrew 
+           //idk how to do this, needa ask around
         }
 
         public string GetCurrentState()
@@ -53,7 +57,7 @@ namespace MECHENG_313_A2.Tasks
 
         public string ProcessEvent(string eventTrigger)
         {
-            // TODO: Implement this - Andrew 
+            //wtf 
             return null;
         }
 
@@ -67,14 +71,18 @@ namespace MECHENG_313_A2.Tasks
             // TODO: Implement this - Joe 
         }
     }
-    public class EventHandler
-    {
-        //variables
-        string nextState;
-        var actionList = new List<...>();
 
-        //methods
-        void actionAdd(...){actionList.Add(...)}
-        void getAction(){return ...}
+    //struct for containing the nextState and list of actions 
+    public struct EventHandler{
+
+        //variables
+        private string nextState;
+        public List<TimestampedAction> actionsList;
+
+        //constructor
+        public EventHandler(string nextState){
+            this.nextState = nextState;
+            actionsList = new List<TimestampedAction>();
+        }
     }
 }
