@@ -49,7 +49,12 @@ namespace MECHENG_313_A2.Tasks
 
         public void SetNextState(string state, string nextState, string eventTrigger)
         {
-            // TODO: Implement this - Joe 
+            //Look for the current state and event trigger 
+            if (fst.ContainsKey(state) && fst[state].ContainsKey(eventTrigger))
+            {   
+                //set the next state
+                fst[state][eventTrigger].setNextState(nextState);
+            }
         }
     }
 
