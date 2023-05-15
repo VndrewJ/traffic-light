@@ -9,40 +9,21 @@ namespace MECHENG_313_A2.Tasks
     {
         //Setup........//
 
-
-        // //Intitialise action delegates (a and b)
-        // public static void a(DateTime timestamp) { return; }
-        // public static void b(DateTime timestamp) { return; }
-        // static TimestampedAction actionA = a;
-        // static TimestampedAction actionB = b;
-
-        //create nested dictionary for FST 
-        // public Dictionary<string, Dictionary<string, ...>> fst =
-        //     new Dictionary<string, Dictionary<string, ...>>
-        //     {   
-        //         // //State G 
-        //         // {"G", new Dictionary<string, TimestampedAction>{{"Y", actionA}}},
-        //         // //State Y
-        //         // {"Y", new Dictionary<string, TimestampedAction>{{"R", actionA}}},
-        //         // //State R
-        //         // {"R", new Dictionary<string, TimestampedAction>{{"G", actionA},{"Y'", actionB}}},
-        //         // //State Y'
-        //         // {"Y'", new Dictionary<string, TimestampedAction>{{"B", actionA},{"R", actionB}}},
-        //         // //State B
-        //         // {"B", new Dictionary<string, TimestampedAction>{{"Y'", actionA},{"R", actionB}}}
-        //     };
-
-        //Initialise varibles
+        // create nested dictionary for FST 
+        // First string for current event 
+        // second string for event trigger 
+        // event for next state and a list of actions 
+        public Dictionary<string, Dictionary<string, nextEventAction>> fst; 
+        
+        //Declare current state varible
         string currentState;
-
-
-        //initialise FST
-        //current state, event trigger, eventHandler struct(next state, action list)
-        public Dictionary<string, Dictionary<string, EventHandler>> finiteStateTable = 
-        new Dictionary<string, Dictionary<string, EventHandler>>();
-
-
         //--------------------------------------------------------------------------------------//
+
+        //constructor 
+        public FiniteStateMachine(string currentState){
+            this.currentState = currentState;
+            fst = new Dictionary<string, Dictionary<string, nextEventAction>>();
+        }
 
         public void AddAction(string state, string eventTrigger, TimestampedAction action)
         {
@@ -72,17 +53,32 @@ namespace MECHENG_313_A2.Tasks
         }
     }
 
-    //struct for containing the nextState and list of actions 
-    public struct EventHandler{
-
+  public class nextEventAction
+    {
         //variables
         private string nextState;
-        public List<TimestampedAction> actionsList;
+        public List<TimestampedAction> actionList;
 
-        //constructor
-        public EventHandler(string nextState){
-            this.nextState = nextState;
-            actionsList = new List<TimestampedAction>();
+        //Constructor 
+        public nextEventAction(string nextState){
+            setNextState(nextState);
+            actionList = new List<TimestampedAction>();
+        }
+        
+        //Methods 
+        public void setNextState(string nextState){
+            this.nextState=nextState;
+        }
+        public string getNextState(){
+            return nextState;
+        }
+        public void actionAdd(TimestampedAction newAction)
+        {
+            actionList.Add(newAction);
+            return; 
+        }
+        public List<TimestampedAction> getAction(){
+            return actionList;
         }
     }
 }
