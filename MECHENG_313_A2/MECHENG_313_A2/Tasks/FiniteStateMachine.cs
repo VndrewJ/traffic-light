@@ -27,8 +27,12 @@ namespace MECHENG_313_A2.Tasks
 
         public void AddAction(string state, string eventTrigger, TimestampedAction action)
         {
-           // TODO: Implement this - Andrew 
-           //idk how to do this, needa ask around
+           //Look for the current state and event trigger 
+            if (fst.ContainsKey(state) && fst[state].ContainsKey(eventTrigger))
+            {   
+                //set the next state
+                fst[state][eventTrigger].actionAdd(action);
+            }
         }
 
         public string GetCurrentState()
