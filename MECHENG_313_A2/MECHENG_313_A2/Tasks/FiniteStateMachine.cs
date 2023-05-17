@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MECHENG_313_A2.Tasks
 {
@@ -40,10 +41,30 @@ namespace MECHENG_313_A2.Tasks
 
         public string ProcessEvent(string eventTrigger)
         {
-            /*processes an event, performs actions associated with it in parallel,
-            and returns the next state*/
+            /*pseudocode for multrithreading
+                initialise list of tasks
+                foreach action in actionlist
+                    queue each action into a task
 
-            return null;
+                return nextState;
+
+            */
+            // //initialise list of tasks to run in parallel
+            // List<Task> runningTasks = new List<Task>();
+
+            // foreach(TimestampedAction action in fst[currentState][eventTrigger].actionList){
+            //     runningTasks.Add(Task.Run(action));
+            // }
+
+
+            //TEMP 
+            //execute each delegate sequentially for now
+            foreach(TimestampedAction action in fst[currentState][eventTrigger].actionList){
+                action.Invoke(DateTime.Now);
+            }
+            
+
+            return fst[currentState][eventTrigger].getNextState();
         }
 
         public void SetCurrentState(string state)
@@ -62,7 +83,7 @@ namespace MECHENG_313_A2.Tasks
         }
     }
 
-  public class nextEventAction
+    public class nextEventAction
     {
         //variables
         private string nextState;
