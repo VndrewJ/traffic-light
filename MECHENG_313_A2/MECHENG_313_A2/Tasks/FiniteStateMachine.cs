@@ -15,12 +15,12 @@ namespace MECHENG_313_A2.Tasks
         public Dictionary<string, Dictionary<string, nextEventAction>> fst; 
         
         //Declare current state varible
-        string currentState;
+        private string currentState;
         //--------------------------------------------------------------------------------------//
 
         //constructor 
         public FiniteStateMachine(string currentState){
-            this.currentState = currentState;
+            SetCurrentState(currentState);
             fst = new Dictionary<string, Dictionary<string, nextEventAction>>();
         }
 
@@ -69,7 +69,7 @@ namespace MECHENG_313_A2.Tasks
 
         public void SetCurrentState(string state)
         {
-            currentState = state;
+            this.currentState = state;
         }
 
         public void SetNextState(string state, string nextState, string eventTrigger)
