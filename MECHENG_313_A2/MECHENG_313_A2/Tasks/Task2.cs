@@ -1,5 +1,6 @@
 ﻿using MECHENG_313_A2.Views;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -92,7 +93,6 @@ namespace MECHENG_313_A2.Tasks
 
         public async Task<string> OpenLogFile()
         {
-            // TODO: Implement this (Andrew)
 
             // Help notes: to read a file named "log.txt" under the LocalApplicationData directory,
             // you may use the following code snippet:
@@ -102,7 +102,16 @@ namespace MECHENG_313_A2.Tasks
             // You can also create/write to file(s) through System.IO.File. 
             // See https://learn.microsoft.com/en-us/xamarin/xamarin-forms/data-cloud/data/files?tabs=windows, and
             // https://learn.microsoft.com/en-us/dotnet/api/system.io.file?view=netstandard-2.0 for more details.
-            return null;
+
+
+            //await not working on this??
+            if(File.Exists("log.txt")){
+                string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "log.txt");
+                return File.ReadAllText(filePath);
+            }
+            else{
+                return "error: file not found";
+            }
         }
 
         public async Task<bool> OpenPort(string serialPort, int baudRate)
@@ -165,9 +174,8 @@ namespace MECHENG_313_A2.Tasks
 
         public void Tick()
         {
-            // TODO: Implement this (Andrew)
-
-            //Make the FST go to the next state
+            //set the current state on button press (event trigger "a")
+            fsm.SetCurrentState(fsm.GetNextState("a"));
         }
     }
 }

@@ -15,6 +15,11 @@ namespace MECHENG_313_A2.Tasks
         void SetNextState(string state, string nextState, string eventTrigger);
 
         /// <summary>
+        /// Gets next state for a given event trigger.
+        /// </summary>
+        string GetNextState(string eventTrigger);
+
+        /// <summary>
         /// Adds an action to be performed when an event is triggered in a given state.
         /// </summary>
         void AddAction(string state, string eventTrigger, TimestampedAction action);
@@ -29,6 +34,7 @@ namespace MECHENG_313_A2.Tasks
         /// Sets the current state of the finite state machine.
         /// </summary>
         void SetCurrentState(string state);
+
 
         /// <summary>
         /// Processes an event trigger, perform the actions associated in parallel (multi-threading, 

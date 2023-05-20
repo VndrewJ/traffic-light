@@ -56,7 +56,7 @@ namespace MECHENG_313_A2.Tasks
             //     runningTasks.Add(Task.Run(action));
             // }
 
-
+           
             //TEMP 
             //execute each delegate sequentially for now
             foreach(TimestampedAction action in fst[currentState][eventTrigger].actionList){
@@ -80,6 +80,11 @@ namespace MECHENG_313_A2.Tasks
                 //set the next state
                 fst[state][eventTrigger].setNextState(nextState);
             }
+        }
+
+        public string GetNextState(string eventTrigger)
+        {
+            return fst[currentState][eventTrigger].getNextState();
         }
     }
 
