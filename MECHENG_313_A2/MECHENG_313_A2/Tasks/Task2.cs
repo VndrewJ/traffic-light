@@ -91,9 +91,13 @@ namespace MECHENG_313_A2.Tasks
 
         public void ExitConfigMode()
         {
-            // TODO: Implement this (Joe)
+            if ((fsm.GetCurrentState() == "Y'") || (fsm.GetCurrentState() == "B")){
+                //Send the action associated with the trigger 
+                actnB(DateTime.Now);
 
-            //Make FSM exit config mode
+                //set the new current state on button press (event trigger "b")
+                fsm.SetCurrentState(fsm.GetNextState("b"));
+            }
         }
 
         public async Task<string[]> GetPortNames()
