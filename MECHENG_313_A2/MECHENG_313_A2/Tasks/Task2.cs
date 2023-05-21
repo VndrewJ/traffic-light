@@ -26,27 +26,27 @@ namespace MECHENG_313_A2.Tasks
                 // Parallel under multiple threads 
                 
                 await serial.SetState(TrafficLightState.Yellow);
-                await _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
+                _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
                 return;
             }
             else if (fsm.GetCurrentState() == "Y"){
                 await serial.SetState(TrafficLightState.Red);
-                await _taskPage.SetTrafficLightState(TrafficLightState.Red);
+                _taskPage.SetTrafficLightState(TrafficLightState.Red);
                 return;
             }
             else if (fsm.GetCurrentState() == "R"){
                await serial.SetState(TrafficLightState.Green);
-               await _taskPage.SetTrafficLightState(TrafficLightState.Green);
+               _taskPage.SetTrafficLightState(TrafficLightState.Green);
                return;
             }
             else if (fsm.GetCurrentState() == "Y'"){
                 await serial.SetState(TrafficLightState.None);
-                await _taskPage.SetTrafficLightState(TrafficLightState.None);
+                _taskPage.SetTrafficLightState(TrafficLightState.None);
                 return;
             }
             else if (fsm.GetCurrentState() == "B"){
                 await serial.SetState(TrafficLightState.Yellow);
-                await _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
+                _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
                 return;
             }
         }
@@ -55,17 +55,17 @@ namespace MECHENG_313_A2.Tasks
         { 
             if (fsm.GetCurrentState() == "R"){
                 await serial.SetState(TrafficLightState.Yellow);
-                await _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
+                _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
                 return;
             }
             else if (fsm.GetCurrentState() == "Y'"){
                 await serial.SetState(TrafficLightState.Red);
-                await _taskPage.SetTrafficLightState(TrafficLightState.Red);
+                _taskPage.SetTrafficLightState(TrafficLightState.Red);
                 return;
             }
             else if (fsm.GetCurrentState() == "B"){
                 await serial.SetState(TrafficLightState.Red);
-                await _taskPage.SetTrafficLightState(TrafficLightState.Red;
+                _taskPage.SetTrafficLightState(TrafficLightState.Red);
                 return;
             }
         }
@@ -153,7 +153,7 @@ namespace MECHENG_313_A2.Tasks
             _taskPage = taskPage;
         }
 
-        public void Start()
+        public async void Start()
         {
             //Add the five states to the table 
             fsm.fst.Add("G", new Dictionary<string, nextEventAction>());
@@ -197,7 +197,8 @@ namespace MECHENG_313_A2.Tasks
             fsm.SetNextState("B", "R", "b"); 
         
             //Enter green 
-            serial.SetState(TrafficLightState.Green); //Unsure if this is the right method, for now keep
+            await serial.SetState(TrafficLightState.Green); //Unsure if this is the right method, for now keep
+            _taskPage.SetTrafficLightState(TrafficLightState.Green);
         }
 
         public void Tick()
