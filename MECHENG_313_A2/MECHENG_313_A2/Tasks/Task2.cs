@@ -137,6 +137,7 @@ namespace MECHENG_313_A2.Tasks
 
         public async Task<bool> OpenPort(string serialPort, int baudRate)
         {
+            
             return await serial.OpenPort(serialPort, baudRate);
         }
 

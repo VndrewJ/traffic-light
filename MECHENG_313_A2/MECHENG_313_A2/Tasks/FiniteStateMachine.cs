@@ -41,28 +41,13 @@ namespace MECHENG_313_A2.Tasks
 
         public string ProcessEvent(string eventTrigger)
         {
-            /*pseudocode for multrithreading
-                initialise list of tasks
-                foreach action in actionlist
-                    queue each action into a task
+            //initialise list of tasks to run in parallel
+            List<Task> runningTasks = new List<Task>();
 
-                return nextState;
-
-            */
-            // //initialise list of tasks to run in parallel
-            // List<Task> runningTasks = new List<Task>();
-
-            // foreach(TimestampedAction action in fst[currentState][eventTrigger].actionList){
-            //     runningTasks.Add(Task.Run(action));
-            // }
-
-           
-            //TEMP 
-            //execute each delegate sequentially for now
+            //iterate through list of tasks and run each in parallel
             foreach(TimestampedAction action in fst[currentState][eventTrigger].actionList){
-                action.Invoke(DateTime.Now);
+                runningTasks.Add(Task.Run(()=>action(DateTime.Now)));
             }
-            
 
             return fst[currentState][eventTrigger].getNextState();
         }
