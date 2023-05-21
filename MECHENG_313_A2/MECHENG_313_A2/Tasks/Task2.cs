@@ -1,4 +1,4 @@
-﻿using MECHENG_313_A2.Views;
+using MECHENG_313_A2.Views;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -20,29 +20,33 @@ namespace MECHENG_313_A2.Tasks
         public async void actnA(DateTime timestamp) 
         { 
             if (fsm.GetCurrentState() == "G"){
-                //1. send serial command to microcontroller
+                //1. send serial command to microcontroller (done)
                 //2. write a log entry to file for the event trigger 
-                //3. Update the traffic light state on the gui
+                //3. Update the traffic light state on the gui (done)
                 // Parallel under multiple threads 
                 
                 await serial.SetState(TrafficLightState.Yellow);
-                
+                await _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
                 return;
             }
             else if (fsm.GetCurrentState() == "Y"){
                 await serial.SetState(TrafficLightState.Red);
+                await _taskPage.SetTrafficLightState(TrafficLightState.Red);
                 return;
             }
             else if (fsm.GetCurrentState() == "R"){
                await serial.SetState(TrafficLightState.Green);
+               await _taskPage.SetTrafficLightState(TrafficLightState.Green);
                return;
             }
             else if (fsm.GetCurrentState() == "Y'"){
                 await serial.SetState(TrafficLightState.None);
+                await _taskPage.SetTrafficLightState(TrafficLightState.None);
                 return;
             }
             else if (fsm.GetCurrentState() == "B"){
                 await serial.SetState(TrafficLightState.Yellow);
+                await _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
                 return;
             }
         }
@@ -51,14 +55,17 @@ namespace MECHENG_313_A2.Tasks
         { 
             if (fsm.GetCurrentState() == "R"){
                 await serial.SetState(TrafficLightState.Yellow);
+                await _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
                 return;
             }
             else if (fsm.GetCurrentState() == "Y'"){
                 await serial.SetState(TrafficLightState.Red);
+                await _taskPage.SetTrafficLightState(TrafficLightState.Red);
                 return;
             }
             else if (fsm.GetCurrentState() == "B"){
                 await serial.SetState(TrafficLightState.Red);
+                await _taskPage.SetTrafficLightState(TrafficLightState.Red;
                 return;
             }
         }
