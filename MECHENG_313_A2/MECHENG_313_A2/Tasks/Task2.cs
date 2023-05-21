@@ -13,10 +13,11 @@ namespace MECHENG_313_A2.Tasks
         //Initiate serial interface
         private MECHENG_313_A2.Serial.MockSerialInterface serial = new MECHENG_313_A2.Serial.MockSerialInterface();
 
+
         //-------Set up FST----------
         private FiniteStateMachine fsm = new FiniteStateMachine("G"); //create new FST, set current state as green
         
-        public void actnA(DateTime timestamp) 
+        public async void actnA(DateTime timestamp) 
         { 
             if (fsm.GetCurrentState() == "G"){
                 //1. send serial command to microcontroller
@@ -24,39 +25,40 @@ namespace MECHENG_313_A2.Tasks
                 //3. Update the traffic light state on the gui
                 // Parallel under multiple threads 
                 
-                serial.SetState(TrafficLightState.Yellow);
+                await serial.SetState(TrafficLightState.Yellow);
+                
                 return;
             }
             else if (fsm.GetCurrentState() == "Y"){
-                serial.SetState(TrafficLightState.Red);
+                await serial.SetState(TrafficLightState.Red);
                 return;
             }
             else if (fsm.GetCurrentState() == "R"){
-               serial.SetState(TrafficLightState.Green);
+               await serial.SetState(TrafficLightState.Green);
                return;
             }
             else if (fsm.GetCurrentState() == "Y'"){
-                serial.SetState(TrafficLightState.None);
+                await serial.SetState(TrafficLightState.None);
                 return;
             }
             else if (fsm.GetCurrentState() == "B"){
-                serial.SetState(TrafficLightState.Yellow);
+                await serial.SetState(TrafficLightState.Yellow);
                 return;
             }
         }
 
-        public void actnB(DateTime timestamp) 
+        public async void actnB(DateTime timestamp) 
         { 
             if (fsm.GetCurrentState() == "R"){
-               serial.SetState(TrafficLightState.Yellow);
-               return;
+                await serial.SetState(TrafficLightState.Yellow);
+                return;
             }
             else if (fsm.GetCurrentState() == "Y'"){
-                serial.SetState(TrafficLightState.Red);
+                await serial.SetState(TrafficLightState.Red);
                 return;
             }
             else if (fsm.GetCurrentState() == "B"){
-                serial.SetState(TrafficLightState.Red);
+                await serial.SetState(TrafficLightState.Red);
                 return;
             }
         }
@@ -102,8 +104,7 @@ namespace MECHENG_313_A2.Tasks
 
         public async Task<string[]> GetPortNames()
         {
-            // TODO: Implement this (Andrew)
-            return new string[0]; 
+            return await serial.GetPortNames();
         }
 
         public async Task<string> OpenLogFile()
@@ -118,9 +119,16 @@ namespace MECHENG_313_A2.Tasks
             // https://learn.microsoft.com/en-us/dotnet/api/system.io.file?view=netstandard-2.0 for more details.
 
             //await not working on this??
+            //check if file exists
             if(File.Exists("log.txt")){
+                //get text from file
                 string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "log.txt");
-                return File.ReadAllText(filePath);
+                string text = File.ReadAllText(filePath);
+
+                //set the log entries in the gui
+                //TODO
+
+                return text;
             }
             else{
                 return "error: file not found";
@@ -129,8 +137,7 @@ namespace MECHENG_313_A2.Tasks
 
         public async Task<bool> OpenPort(string serialPort, int baudRate)
         {
-            // TODO: Implement this (Andrew)
-            return false;
+            return await serial.OpenPort(serialPort, baudRate);
         }
 
         public void RegisterTaskPage(ITaskPage taskPage)
