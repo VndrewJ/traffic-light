@@ -69,13 +69,24 @@ namespace MECHENG_313_A2.Tasks
 
         public void ConfigLightLength(int redLength, int greenLength)
         {
-            // TODO: Implement this (Joe)
+            //No need for task 2. 
         }
 
         public async Task<bool> EnterConfigMode()
         {
-            // TODO: Implement this (Joe)
-            return false;
+            if (fsm.GetCurrentState() != "R"){
+                return false;
+            }
+            else {
+                
+                //Send the action associated with the trigger 
+                actnB(DateTime.Now);
+
+                //set the new current state on button press (event trigger "b")
+                fsm.SetCurrentState(fsm.GetNextState("b"));
+
+                return true;
+            }
         }
 
         public void ExitConfigMode()
@@ -93,7 +104,6 @@ namespace MECHENG_313_A2.Tasks
 
         public async Task<string> OpenLogFile()
         {
-
             // Help notes: to read a file named "log.txt" under the LocalApplicationData directory,
             // you may use the following code snippet:
             //string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "log.txt");
@@ -102,7 +112,6 @@ namespace MECHENG_313_A2.Tasks
             // You can also create/write to file(s) through System.IO.File. 
             // See https://learn.microsoft.com/en-us/xamarin/xamarin-forms/data-cloud/data/files?tabs=windows, and
             // https://learn.microsoft.com/en-us/dotnet/api/system.io.file?view=netstandard-2.0 for more details.
-
 
             //await not working on this??
             if(File.Exists("log.txt")){
@@ -174,7 +183,10 @@ namespace MECHENG_313_A2.Tasks
 
         public void Tick()
         {
-            //set the current state on button press (event trigger "a")
+            //Call action a
+            actnA(DateTime.Now);
+            
+            //set the new current state on button press (event trigger "a")
             fsm.SetCurrentState(fsm.GetNextState("a"));
         }
     }
