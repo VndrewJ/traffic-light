@@ -137,6 +137,9 @@ namespace MECHENG_313_A2.Tasks
             _taskPage.AddLogEntry(filePath);
             //it does create a file, can't enter the if conditional however. 
 
+            //check if file does not exist
+            if(filePath == null) {return "Error, file does not exist";}
+
             //check if file exists
             if(File.Exists(filePath)){
                 
@@ -149,8 +152,9 @@ namespace MECHENG_313_A2.Tasks
 
                 //clear old file
                 File.WriteAllText(filePath, String.Empty);
-
-                //instantiate streamwriter
+            }
+            
+            //instantiate streamwriter
                 write = new StreamWriter(filePath);
 
                 //indicate that file has been accessed
@@ -158,11 +162,6 @@ namespace MECHENG_313_A2.Tasks
                 write.Flush();
 
                 return filePath;
-            }
-            else
-            {
-                return "error: file not found";
-            }
         }
 
         public async Task<bool> OpenPort(string serialPort, int baudRate)
@@ -239,8 +238,6 @@ namespace MECHENG_313_A2.Tasks
             //print to serial
             _taskPage.SerialPrint(DateTime.Now, state);
 
-            //write to log and gui
-            write = new StreamWriter(filePath);
             write.WriteLine(DateTime.Now + " " + eventTrigger + " " + state);
             write.Flush();
             _taskPage.AddLogEntry(DateTime.Now + " " + eventTrigger + " " + state);
