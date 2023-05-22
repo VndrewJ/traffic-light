@@ -13,6 +13,9 @@ namespace MECHENG_313_A2.Tasks
         //Initiate serial interface
         private MECHENG_313_A2.Serial.MockSerialInterface serial = new MECHENG_313_A2.Serial.MockSerialInterface();
 
+        //initiate StreamWriter to write to log 
+        private StreamWriter write;
+
 
         //-------Set up FST----------
         private FiniteStateMachine fsm = new FiniteStateMachine("G"); //create new FST, set current state as green
@@ -27,31 +30,31 @@ namespace MECHENG_313_A2.Tasks
                 
                 await serial.SetState(TrafficLightState.Yellow);
                 _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
-                _taskPage.AddLogEntry("test Y\n");
+                LogPrint("tick", "Yellow");
                 return;
             }
             else if (fsm.GetCurrentState() == "Y"){
                 await serial.SetState(TrafficLightState.Red);
                 _taskPage.SetTrafficLightState(TrafficLightState.Red);
-                _taskPage.AddLogEntry("test R\n");
+                LogPrint("tick", "Red");
                 return;
             }
             else if (fsm.GetCurrentState() == "R"){
                await serial.SetState(TrafficLightState.Green);
                _taskPage.SetTrafficLightState(TrafficLightState.Green);
-               _taskPage.AddLogEntry("test G\n");
+               LogPrint("tick", "Green");
                return;
             }
             else if (fsm.GetCurrentState() == "Y'"){
                 await serial.SetState(TrafficLightState.None);
                 _taskPage.SetTrafficLightState(TrafficLightState.None);
-                _taskPage.AddLogEntry("test NA\n");
+                LogPrint("tick", "N/A");
                 return;
             }
             else if (fsm.GetCurrentState() == "B"){
                 await serial.SetState(TrafficLightState.Yellow);
                 _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
-                _taskPage.AddLogEntry("test Y\n");
+                LogPrint("tick", "Yellow (Config)");
                 return;
             }
         }
@@ -61,19 +64,19 @@ namespace MECHENG_313_A2.Tasks
             if (fsm.GetCurrentState() == "R"){
                 await serial.SetState(TrafficLightState.Yellow);
                 _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
-                _taskPage.AddLogEntry("test Y\n");
+                LogPrint("config", "Yellow (Config)");
                 return;
             }
             else if (fsm.GetCurrentState() == "Y'"){
                 await serial.SetState(TrafficLightState.Red);
                 _taskPage.SetTrafficLightState(TrafficLightState.Red);
-                _taskPage.AddLogEntry("test T\n");
+                LogPrint("config", "Red");
                 return;
             }
             else if (fsm.GetCurrentState() == "B"){
                 await serial.SetState(TrafficLightState.Red);
                 _taskPage.SetTrafficLightState(TrafficLightState.Red);
-                _taskPage.AddLogEntry("test B\n");
+                LogPrint("config", "Red");
                 return;
             }
         }
@@ -103,7 +106,7 @@ namespace MECHENG_313_A2.Tasks
 
                 //set the new current state on button press (event trigger "b")
                 fsm.SetCurrentState(fsm.GetNextState("b"));
-                _taskPage.AddLogEntry("Entered Config Mode\n");
+                LogPrint("config", "Entered Config Mode");
 
                 return true;
             }
@@ -117,7 +120,7 @@ namespace MECHENG_313_A2.Tasks
 
                 //set the new current state on button press (event trigger "b")
                 fsm.SetCurrentState(fsm.GetNextState("b"));
-                _taskPage.AddLogEntry("Exited Config Mode\n");
+                LogPrint("config", "Exited Config Mode");
             }
         }
 
@@ -127,18 +130,7 @@ namespace MECHENG_313_A2.Tasks
         }
 
         public async Task<string> OpenLogFile()
-        {
-            // Help notes: to read a file named "log.txt" under the LocalApplicationData directory,
-            // you may use the following code snippet:
-            //string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "log.txt");
-            //string text = File.ReadAllText(filePath);
-            //
-            // You can also create/write to file(s) through System.IO.File. 
-            // See https://learn.microsoft.com/en-us/xamarin/xamarin-forms/data-cloud/data/files?tabs=windows, and
-            // https://learn.microsoft.com/en-us/dotnet/api/system.io.file?view=netstandard-2.0 for more details.
-
-            //await not working on this??
-            
+        {   
             //find file path
             string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "log.txt");
             //debug 
@@ -152,12 +144,23 @@ namespace MECHENG_313_A2.Tasks
                 string text = File.ReadAllText(filePath);
 
                 //split the text string into an array and set log entry in GUI
-                string[] logArray = text.Split(new char[] {'\n'});
+                string[] logArray = text.Split('\n');
                 _taskPage.SetLogEntries(logArray);
+
+                //clear old file
+                File.WriteAllText(filePath, String.Empty);
+
+                //instantiate streamwriter
+                write = new StreamWriter(filePath);
+
+                //indicate that file has been accessed
+                write.WriteLine("File Accessed\n");
+                write.Flush();
 
                 return filePath;
             }
-            else{
+            else
+            {
                 return "error: file not found";
             }
         }
@@ -216,9 +219,6 @@ namespace MECHENG_313_A2.Tasks
             fsm.SetNextState("B", "Y'", "a");
             fsm.SetNextState("B", "R", "b"); 
 
-            //create log file?
-            //TODO
-
             //Enter green 
             await serial.SetState(TrafficLightState.Green); //Unsure if this is the right method, for now keep
             _taskPage.SetTrafficLightState(TrafficLightState.Green);
@@ -236,7 +236,13 @@ namespace MECHENG_313_A2.Tasks
 
         public void LogPrint(string eventTrigger, string state)
         {
-            //TODO
+            //print to serial
+            _taskPage.SerialPrint(DateTime.Now, state);
+
+            //write to log
+            write.WriteLine(DateTime.Now + " " + eventTrigger + " " + state);
+            write.Flush();
+            _taskPage.AddLogEntry(DateTime.Now + " " + eventTrigger + " " + state);
         }
     }
 }
