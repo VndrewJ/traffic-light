@@ -78,6 +78,8 @@ namespace MECHENG_313_A2.Tasks
             }
         }
 
+        string filePath; 
+
         //----------------------------------------
 
         public virtual TaskNumber TaskNumber => TaskNumber.Task2;
@@ -136,10 +138,17 @@ namespace MECHENG_313_A2.Tasks
             // https://learn.microsoft.com/en-us/dotnet/api/system.io.file?view=netstandard-2.0 for more details.
 
             //await not working on this??
+            
+            //find file path
+            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "log.txt");
+            //debug 
+            _taskPage.AddLogEntry(filePath);
+            //it does create a file, can't enter the if conditional however. 
+
             //check if file exists
-            if(File.Exists("log.txt")){
+            if(File.Exists(filePath)){
+                
                 //get text from file
-                string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "log.txt");
                 string text = File.ReadAllText(filePath);
 
                 //split the text string into an array and set log entry in GUI
@@ -213,6 +222,7 @@ namespace MECHENG_313_A2.Tasks
             //Enter green 
             await serial.SetState(TrafficLightState.Green); //Unsure if this is the right method, for now keep
             _taskPage.SetTrafficLightState(TrafficLightState.Green);
+            _taskPage.AddLogEntry("test G\n");
         }
 
         public void Tick()
