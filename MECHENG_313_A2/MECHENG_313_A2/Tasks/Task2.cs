@@ -239,7 +239,8 @@ namespace MECHENG_313_A2.Tasks
             //print to serial
             _taskPage.SerialPrint(DateTime.Now, state);
 
-            //write to log
+            //write to log and gui
+            write = new StreamWriter(filePath);
             write.WriteLine(DateTime.Now + " " + eventTrigger + " " + state);
             write.Flush();
             _taskPage.AddLogEntry(DateTime.Now + " " + eventTrigger + " " + state);
