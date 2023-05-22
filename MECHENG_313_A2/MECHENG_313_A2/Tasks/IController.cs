@@ -105,5 +105,11 @@ namespace MECHENG_313_A2.Tasks
         /// (e.g. 1000 ms for Yellow -> Red light, etc.).
         /// </summary>
         void Tick();
+
+        /// <summary>
+        /// Writes to log file the event trigger and new state + dateTime
+        /// Prints to serial.output the event trigger and new state + dateTime
+        /// </summary>
+        void LogPrint(string eventTrigger, string state);
     }
 }

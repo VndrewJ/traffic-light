@@ -27,26 +27,31 @@ namespace MECHENG_313_A2.Tasks
                 
                 await serial.SetState(TrafficLightState.Yellow);
                 _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
+                _taskPage.AddLogEntry("test Y\n");
                 return;
             }
             else if (fsm.GetCurrentState() == "Y"){
                 await serial.SetState(TrafficLightState.Red);
                 _taskPage.SetTrafficLightState(TrafficLightState.Red);
+                _taskPage.AddLogEntry("test R\n");
                 return;
             }
             else if (fsm.GetCurrentState() == "R"){
                await serial.SetState(TrafficLightState.Green);
                _taskPage.SetTrafficLightState(TrafficLightState.Green);
+               _taskPage.AddLogEntry("test G\n");
                return;
             }
             else if (fsm.GetCurrentState() == "Y'"){
                 await serial.SetState(TrafficLightState.None);
                 _taskPage.SetTrafficLightState(TrafficLightState.None);
+                _taskPage.AddLogEntry("test NA\n");
                 return;
             }
             else if (fsm.GetCurrentState() == "B"){
                 await serial.SetState(TrafficLightState.Yellow);
                 _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
+                _taskPage.AddLogEntry("test Y\n");
                 return;
             }
         }
@@ -56,16 +61,19 @@ namespace MECHENG_313_A2.Tasks
             if (fsm.GetCurrentState() == "R"){
                 await serial.SetState(TrafficLightState.Yellow);
                 _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
+                _taskPage.AddLogEntry("test Y\n");
                 return;
             }
             else if (fsm.GetCurrentState() == "Y'"){
                 await serial.SetState(TrafficLightState.Red);
                 _taskPage.SetTrafficLightState(TrafficLightState.Red);
+                _taskPage.AddLogEntry("test T\n");
                 return;
             }
             else if (fsm.GetCurrentState() == "B"){
                 await serial.SetState(TrafficLightState.Red);
                 _taskPage.SetTrafficLightState(TrafficLightState.Red);
+                _taskPage.AddLogEntry("test B\n");
                 return;
             }
         }
@@ -93,6 +101,7 @@ namespace MECHENG_313_A2.Tasks
 
                 //set the new current state on button press (event trigger "b")
                 fsm.SetCurrentState(fsm.GetNextState("b"));
+                _taskPage.AddLogEntry("Entered Config Mode\n");
 
                 return true;
             }
@@ -106,6 +115,7 @@ namespace MECHENG_313_A2.Tasks
 
                 //set the new current state on button press (event trigger "b")
                 fsm.SetCurrentState(fsm.GetNextState("b"));
+                _taskPage.AddLogEntry("Exited Config Mode\n");
             }
         }
 
@@ -132,10 +142,11 @@ namespace MECHENG_313_A2.Tasks
                 string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "log.txt");
                 string text = File.ReadAllText(filePath);
 
-                //set the log entries in the gui
-                //TODO
+                //split the text string into an array and set log entry in GUI
+                string[] logArray = text.Split(new char[] {'\n'});
+                _taskPage.SetLogEntries(logArray);
 
-                return text;
+                return filePath;
             }
             else{
                 return "error: file not found";
@@ -195,7 +206,10 @@ namespace MECHENG_313_A2.Tasks
             fsm.SetNextState("Y'", "R", "b");
             fsm.SetNextState("B", "Y'", "a");
             fsm.SetNextState("B", "R", "b"); 
-        
+
+            //create log file?
+            //TODO
+
             //Enter green 
             await serial.SetState(TrafficLightState.Green); //Unsure if this is the right method, for now keep
             _taskPage.SetTrafficLightState(TrafficLightState.Green);
@@ -208,6 +222,11 @@ namespace MECHENG_313_A2.Tasks
             
             //set the new current state on button press (event trigger "a")
             fsm.SetCurrentState(fsm.GetNextState("a"));
+        }
+
+        public void LogPrint(string eventTrigger, string state)
+        {
+            //TODO
         }
     }
 }
