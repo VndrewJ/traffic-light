@@ -16,7 +16,6 @@ namespace MECHENG_313_A2.Tasks
         //initiate StreamWriter to write to log 
         private StreamWriter write;
 
-
         //-------Set up FST----------
         private FiniteStateMachine fsm = new FiniteStateMachine("G"); //create new FST, set current state as green
         
@@ -26,35 +25,34 @@ namespace MECHENG_313_A2.Tasks
                 //1. send serial command to microcontroller (done)
                 //2. write a log entry to file for the event trigger 
                 //3. Update the traffic light state on the gui (done)
-                // Parallel under multiple threads 
                 
                 await serial.SetState(TrafficLightState.Yellow);
                 _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
-                LogPrint("tick", "Yellow");
+                LogPrint("Tick", "Yellow");
                 return;
             }
             else if (fsm.GetCurrentState() == "Y"){
                 await serial.SetState(TrafficLightState.Red);
                 _taskPage.SetTrafficLightState(TrafficLightState.Red);
-                LogPrint("tick", "Red");
+                LogPrint("Tick", "Red");
                 return;
             }
             else if (fsm.GetCurrentState() == "R"){
                await serial.SetState(TrafficLightState.Green);
                _taskPage.SetTrafficLightState(TrafficLightState.Green);
-               LogPrint("tick", "Green");
+               LogPrint("Tick", "Green");
                return;
             }
             else if (fsm.GetCurrentState() == "Y'"){
                 await serial.SetState(TrafficLightState.None);
                 _taskPage.SetTrafficLightState(TrafficLightState.None);
-                LogPrint("tick", "N/A");
+                LogPrint("Tick", "N/A");
                 return;
             }
             else if (fsm.GetCurrentState() == "B"){
                 await serial.SetState(TrafficLightState.Yellow);
                 _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
-                LogPrint("tick", "Yellow (Config)");
+                LogPrint("Tick", "Yellow (Config)");
                 return;
             }
         }
@@ -64,24 +62,22 @@ namespace MECHENG_313_A2.Tasks
             if (fsm.GetCurrentState() == "R"){
                 await serial.SetState(TrafficLightState.Yellow);
                 _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
-                LogPrint("config", "Yellow (Config)");
+                LogPrint("Config", "Yellow (Config)");
                 return;
             }
             else if (fsm.GetCurrentState() == "Y'"){
                 await serial.SetState(TrafficLightState.Red);
                 _taskPage.SetTrafficLightState(TrafficLightState.Red);
-                LogPrint("config", "Red");
+                LogPrint("Config", "Red");
                 return;
             }
             else if (fsm.GetCurrentState() == "B"){
                 await serial.SetState(TrafficLightState.Red);
                 _taskPage.SetTrafficLightState(TrafficLightState.Red);
-                LogPrint("config", "Red");
+                LogPrint("Config", "Red");
                 return;
             }
         }
-
-        string filePath; 
 
         //----------------------------------------
 
@@ -137,9 +133,6 @@ namespace MECHENG_313_A2.Tasks
             _taskPage.AddLogEntry(filePath);
             //it does create a file, can't enter the if conditional however. 
 
-            //check if file does not exist
-            if(filePath == null) {return "Error, file does not exist";}
-
             //check if file exists
             if(File.Exists(filePath)){
                 
@@ -152,9 +145,8 @@ namespace MECHENG_313_A2.Tasks
 
                 //clear old file
                 File.WriteAllText(filePath, String.Empty);
-            }
-            
-            //instantiate streamwriter
+
+                //instantiate streamwriter
                 write = new StreamWriter(filePath);
 
                 //indicate that file has been accessed
@@ -162,6 +154,11 @@ namespace MECHENG_313_A2.Tasks
                 write.Flush();
 
                 return filePath;
+            }
+            else
+            {
+                return "error: file not found";
+            }
         }
 
         public async Task<bool> OpenPort(string serialPort, int baudRate)
@@ -221,7 +218,7 @@ namespace MECHENG_313_A2.Tasks
             //Enter green 
             await serial.SetState(TrafficLightState.Green); //Unsure if this is the right method, for now keep
             _taskPage.SetTrafficLightState(TrafficLightState.Green);
-            _taskPage.AddLogEntry("test G\n");
+            LogPrint("Starting...", "Green");
         }
 
         public void Tick()
@@ -238,6 +235,8 @@ namespace MECHENG_313_A2.Tasks
             //print to serial
             _taskPage.SerialPrint(DateTime.Now, state);
 
+            //write to log and gui
+            //write = new StreamWriter(filePath);
             write.WriteLine(DateTime.Now + " " + eventTrigger + " " + state);
             write.Flush();
             _taskPage.AddLogEntry(DateTime.Now + " " + eventTrigger + " " + state);
