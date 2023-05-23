@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 
@@ -22,7 +23,7 @@ namespace MECHENG_313_A2.Tasks
         private int greenLength = 1000;
         private int defaultLength = 1000; 
 
-        private bool configRequested = false; //Config request flag if config is requested from yellow and green
+        ConfigHelper configHelper = new ConfigHelper();
 
         //IMPLEMENTATION-----------------------------------------------
 
@@ -35,14 +36,17 @@ namespace MECHENG_313_A2.Tasks
 
         public override async Task<bool> EnterConfigMode()
         {
-            if(fsm.GetCurrentState() != "R"){
-                configRequested = true;
+            Task waitingTask = configHelper.WaitForRedLightAsync();
+            Thread.Sleep(redLength);
+            configHelper.SetRedLight();
+            
+            if((configHelper.GetIsRed())==false){
                 return false;
             }
             else{
                 
                 //Send the action associated with the trigger 
-                actnB(DateTime.Now);
+                actnB(DateTime.Now); 
 
                 //set the new current state on button press (event trigger "b")
                 fsm.SetCurrentState(fsm.GetNextState("b"));
@@ -75,22 +79,41 @@ namespace MECHENG_313_A2.Tasks
             //     return true;
             // }
         }
-        public override void Tick()
+
+        
+
+    }
+
+    public class ConfigHelper
+    {
+        private SemaphoreSlim semaphore = new SemaphoreSlim (0,1);
+        private bool isRed = false; 
+
+        public async Task WaitForRedLightAsync()
         {
-            /*
-            Pseudocode
-                if configRequested
-                    if red
-                        enterconfig
-                        reset configRequested
-                    tick
-                tick
-            */
-            //if config is requested
-            if(configRequested == true && fsm.GetCurrentState() == "R"){
-                
+            while(true){
+                await semaphore.WaitAsync();
+                if (isRed){
+                    break;
+                }
             }
-            base.Tick();
+        }
+
+        public void SetRedLight()
+        {
+            isRed = true;
+            semaphore.Release();
+        }
+
+        public void SetGreenLight()
+        {
+            isRed = false;
+        }
+
+        public bool GetIsRed(){
+            return this.isRed;
         }
     }
+
+    
 }
