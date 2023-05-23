@@ -11,13 +11,13 @@ namespace MECHENG_313_A2.Tasks
     {   
         /*-------------------SETUP-------------------*/
         //Initiate serial interface
-        private MECHENG_313_A2.Serial.MockSerialInterface serial = new MECHENG_313_A2.Serial.MockSerialInterface();
+        protected MECHENG_313_A2.Serial.MockSerialInterface serial = new MECHENG_313_A2.Serial.MockSerialInterface();
 
         //initiate StreamWriter to write to log 
-        private StreamWriter write;
+        protected StreamWriter write;
 
         //-------Set up FST----------
-        private FiniteStateMachine fsm = new FiniteStateMachine("G"); //create new FST, set current state as green
+        protected FiniteStateMachine fsm = new FiniteStateMachine("G"); //create new FST, set current state as green
         
         public async void actnA(DateTime timestamp) 
         { 
@@ -85,12 +85,12 @@ namespace MECHENG_313_A2.Tasks
 
         protected ITaskPage _taskPage;
 
-        public void ConfigLightLength(int redLength, int greenLength)
+        public virtual void ConfigLightLength(int redLength, int greenLength)
         {
             //No need for task 2. 
         }
 
-        public async Task<bool> EnterConfigMode()
+        public virtual async Task<bool> EnterConfigMode()
         {
             if (fsm.GetCurrentState() != "R"){
                 return false;

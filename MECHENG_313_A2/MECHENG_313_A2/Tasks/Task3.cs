@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using System.IO;
 
 namespace MECHENG_313_A2.Tasks
 {
@@ -31,7 +33,7 @@ namespace MECHENG_313_A2.Tasks
             this.greenLength = greenLength; 
         }
 
-        public virtual async Task<bool> EnterConfigMode()
+        public override async Task<bool> EnterConfigMode()
         {
             //Overriden to allow for input from other states as well 
             if (fsm.GetCurrentState() != "R"){
