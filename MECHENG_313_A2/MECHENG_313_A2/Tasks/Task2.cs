@@ -221,7 +221,7 @@ namespace MECHENG_313_A2.Tasks
             LogPrint("Starting...", "Green");
         }
 
-        public void Tick()
+        public virtual void Tick()
         {
             //Call action a
             actnA(DateTime.Now);
