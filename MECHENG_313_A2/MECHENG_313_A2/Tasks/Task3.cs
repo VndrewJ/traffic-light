@@ -38,8 +38,9 @@ namespace MECHENG_313_A2.Tasks
 
         public override async Task<bool> EnterConfigMode()
         {
+            //spinlock that stalls thread if not red 
             if(fsm.GetCurrentState() != "R"){
-                SpinWait.SpinUntil(()=> (fsm.GetNextState("a")=="G"));
+                SpinWait.SpinUntil(()=> (fsm.GetCurrentState()=="G"));
             }
 
             //Send the action associated with the trigger 
@@ -88,8 +89,5 @@ namespace MECHENG_313_A2.Tasks
             }
 
         }
-        
-        
-        
     }
 }
