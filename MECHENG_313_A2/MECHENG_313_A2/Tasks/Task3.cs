@@ -41,10 +41,7 @@ namespace MECHENG_313_A2.Tasks
         {
             _config = true;
             //spinlock that stalls thread if not red 
-            if(fsm.GetCurrentState() != "R"){
-                SpinWait.SpinUntil(()=> (_isRed));
-                //await Task.Delay(redLength);
-            }
+            SpinWait.SpinUntil(()=> (_isRed));
 
             //Send the action associated with the trigger 
             actnB(DateTime.Now);
