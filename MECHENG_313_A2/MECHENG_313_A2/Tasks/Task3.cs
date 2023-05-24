@@ -39,7 +39,15 @@ namespace MECHENG_313_A2.Tasks
         {
             if (fsm.GetCurrentState() != "R"){
                 if ((fsm.GetCurrentState()=="Y")&&(fsm.GetCurrentState()=="G")){
-                    SpinWait.
+                    SpinWait.SpinUntil(()=> _isRed);
+                     //Send the action associated with the trigger 
+                    actnB(DateTime.Now);
+
+                    //set the new current state on button press (event trigger "b")
+                    fsm.SetCurrentState(fsm.GetNextState("b"));
+                    LogPrint("config", "Entered Config Mode");
+
+                    return true;
                 }
                 else{
                     return false;
@@ -60,14 +68,16 @@ namespace MECHENG_313_A2.Tasks
 
         public override void ExitConfigMode()
         {
-            SpinWait.SpinUntil(()=> _isRed);
+            timer.Change(redLength, Timeout.Infinite);
             base.ExitConfigMode();
         }
 
         public override async void Start()
         {
             base.Start();
-            timer = new Timer(TimerCallback, null, Timeout.Infinite, Timeout.Infinite);
+            timer = new Timer(TimerCallback, null, 0, greenLength);
+            timer.Change(greenLength, Timeout.Infinite);
+
         }
 
         
@@ -77,15 +87,16 @@ namespace MECHENG_313_A2.Tasks
             //for green to red
             if(fsm.GetCurrentState() == "G"){
                 Tick();
-                timer.Change(redLength, Timeout.Infinite);
+                timer.Change(greenLength, Timeout.Infinite);
             }
             //for red to green
             else if(fsm.GetCurrentState() == "R"){
                 Tick();
-                timer.Change(greenLength, Timeout.Infinite);
+                timer.Change(redLength, Timeout.Infinite);
             }
             else{
                 Tick();
+                timer.Change(defaultLength, Timeout.Infinite);
             }
         }
         
