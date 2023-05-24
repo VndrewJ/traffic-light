@@ -37,33 +37,20 @@ namespace MECHENG_313_A2.Tasks
 
         public override async Task<bool> EnterConfigMode()
         {
-            if (fsm.GetCurrentState() != "R"){
-                if ((fsm.GetCurrentState()=="Y")&&(fsm.GetCurrentState()=="G")){
-                    SpinWait.SpinUntil(()=> _isRed);
-                     //Send the action associated with the trigger 
-                    actnB(DateTime.Now);
-
-                    //set the new current state on button press (event trigger "b")
-                    fsm.SetCurrentState(fsm.GetNextState("b"));
-                    LogPrint("config", "Entered Config Mode");
-
-                    return true;
-                }
-                else{
-                    return false;
-                }
+            if(fsm.GetCurrentState() != "R"){
+                SpinWait.SpinUntil(()=> _isRed);
             }
-            else {
+
+
                 
-                //Send the action associated with the trigger 
-                actnB(DateTime.Now);
+            //Send the action associated with the trigger 
+            actnB(DateTime.Now);
 
-                //set the new current state on button press (event trigger "b")
-                fsm.SetCurrentState(fsm.GetNextState("b"));
-                LogPrint("config", "Entered Config Mode");
+            //set the new current state on button press (event trigger "b")
+            fsm.SetCurrentState(fsm.GetNextState("b"));
+            LogPrint("config", "Entered Config Mode");
 
-                return true;
-            }
+            return true;
         }
 
         public override void ExitConfigMode()
@@ -84,13 +71,14 @@ namespace MECHENG_313_A2.Tasks
         //where the timer if configured for each state
         public void TimerCallback(object state)
         {
-            //for green to red
+            //for green to Yellow
             if(fsm.GetCurrentState() == "G"){
                 Tick();
                 timer.Change(greenLength, Timeout.Infinite);
             }
             //for red to green
             else if(fsm.GetCurrentState() == "R"){
+                _isRed = true;
                 Tick();
                 timer.Change(redLength, Timeout.Infinite);
             }
