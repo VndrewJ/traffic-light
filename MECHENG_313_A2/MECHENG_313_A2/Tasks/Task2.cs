@@ -108,7 +108,7 @@ namespace MECHENG_313_A2.Tasks
             }
         }
 
-        public void ExitConfigMode()
+        public virtual void ExitConfigMode()
         {
             if ((fsm.GetCurrentState() == "Y'") || (fsm.GetCurrentState() == "B")){
                 //Send the action associated with the trigger 

@@ -39,7 +39,28 @@ namespace MECHENG_313_A2.Tasks
 
         public override async Task<bool> EnterConfigMode()
         {
-            return false;
+            if (fsm.GetCurrentState() != "R"){
+                return false;
+            }
+            else {
+                
+                //Send the action associated with the trigger 
+                actnB(DateTime.Now);
+
+                //set the new current state on button press (event trigger "b")
+                fsm.SetCurrentState(fsm.GetNextState("b"));
+                LogPrint("config", "Entered Config Mode");
+
+                return true;
+            }
+        }
+
+        public override void ExitConfigMode()
+        {
+            timer.Interval = redLength;
+            timer.Stop();
+            timer.Start();
+            base.ExitConfigMode();
         }
 
         public override async void Start()
