@@ -112,8 +112,5 @@ namespace MECHENG_313_A2.Tasks
         /// Prints to gui the event trigger and new state + dateTime
         /// </summary>
         void LogPrint(string eventTrigger, string state);
-
-        //sets the timer for the traffic lights
-        void TimerConfig();
     }
 }

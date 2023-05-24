@@ -39,7 +39,7 @@ namespace MECHENG_313_A2.Tasks
 
         public override async Task<bool> EnterConfigMode()
         {
-
+            return false;
         }
 
         public override async void Start()
