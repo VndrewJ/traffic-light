@@ -25,6 +25,7 @@ namespace MECHENG_313_A2.Tasks
         private int defaultLength = 1000; 
 
         private bool _isRed = false;
+        private bool _config = false;
         static System.Timers.Timer timer;
 
         //IMPLEMENTATION-----------------------------------------------
@@ -38,9 +39,10 @@ namespace MECHENG_313_A2.Tasks
 
         public override async Task<bool> EnterConfigMode()
         {
+            _config = true;
             //spinlock that stalls thread if not red 
             if(fsm.GetCurrentState() != "R"){
-                SpinWait.SpinUntil(()=> (fsm.GetNextState("a")=="G"));
+                SpinWait.SpinUntil(()=> (_isRed));
                 //await Task.Delay(redLength);
             }
 
@@ -59,6 +61,7 @@ namespace MECHENG_313_A2.Tasks
             base.ExitConfigMode();
             timer.Stop();
             _isRed = false;
+            _config = false; 
             timer.Interval = redLength;
             timer.Start();
         }
@@ -72,6 +75,20 @@ namespace MECHENG_313_A2.Tasks
             timer.Start();
         }
 
+        public override void Tick()
+        {
+            if (fsm.GetCurrentState() == "R" && _config ) {
+                _isRed = true;
+            }
+            else {
+                //Call action a
+                actnA(DateTime.Now);
+                //set the new current state on button press (event trigger "a")
+                fsm.SetCurrentState(fsm.GetNextState("a"));
+            }
+        }
+
+
         public void TimerConfig(object state, ElapsedEventArgs e)
         {
             Tick();
@@ -81,6 +98,7 @@ namespace MECHENG_313_A2.Tasks
                 timer.Interval = greenLength;
             }
             else if(fsm.GetCurrentState()=="R" && !_isRed){
+                
                 timer.Interval = redLength;
             }
             else{
