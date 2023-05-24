@@ -38,7 +38,7 @@ namespace MECHENG_313_A2.Tasks
         public override async Task<bool> EnterConfigMode()
         {
             if(fsm.GetCurrentState() != "R"){
-                SpinWait.SpinUntil(()=> _isRed);
+                SpinWait.SpinUntil(()=> (fsm.GetNextState("a")=="G"));
             }
 
 
@@ -71,19 +71,16 @@ namespace MECHENG_313_A2.Tasks
         //where the timer if configured for each state
         public void TimerCallback(object state)
         {
+            Tick();
             //for green to Yellow
-            if(fsm.GetCurrentState() == "G"){
-                Tick();
+            if(fsm.GetCurrentState() == "G"){ 
                 timer.Change(greenLength, Timeout.Infinite);
             }
             //for red to green
-            else if(fsm.GetCurrentState() == "R"){
-                _isRed = true;
-                Tick();
+            else if(fsm.GetCurrentState() == "R"){  
                 timer.Change(redLength, Timeout.Infinite);
             }
             else{
-                Tick();
                 timer.Change(defaultLength, Timeout.Infinite);
             }
         }
