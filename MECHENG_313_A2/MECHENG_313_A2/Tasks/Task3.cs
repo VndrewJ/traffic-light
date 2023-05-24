@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
+using System.Timers;
 
 namespace MECHENG_313_A2.Tasks
 {
@@ -24,7 +25,7 @@ namespace MECHENG_313_A2.Tasks
         private int defaultLength = 1000; 
 
         private bool _isRed = false;
-        static Timer timer;
+        static System.Timers.Timer timer;
 
         //IMPLEMENTATION-----------------------------------------------
 
@@ -38,11 +39,9 @@ namespace MECHENG_313_A2.Tasks
         public override async Task<bool> EnterConfigMode()
         {
             if(fsm.GetCurrentState() != "R"){
-                SpinWait.SpinUntil(()=> (fsm.GetNextState("a")=="G"));
+                SpinWait.SpinUntil(()=> (fsm.GetNextState("a")=="Y"));
             }
 
-
-                
             //Send the action associated with the trigger 
             actnB(DateTime.Now);
 
@@ -55,35 +54,42 @@ namespace MECHENG_313_A2.Tasks
 
         public override void ExitConfigMode()
         {
-            timer.Change(redLength, Timeout.Infinite);
             base.ExitConfigMode();
+            timer.Stop();
+            _isRed = false;
+            timer.Interval = redLength;
+            timer.Start();
         }
 
         public override async void Start()
         {
             base.Start();
-            timer = new Timer(TimerCallback, null, 0, greenLength);
-            timer.Change(greenLength, Timeout.Infinite);
-
+            timer = new System.Timers.Timer(greenLength);
+            timer.Elapsed += TimerConfig;
+            timer.AutoReset = true;
+            timer.Start();
         }
 
-        
-        //where the timer if configured for each state
-        public void TimerCallback(object state)
+        public void TimerConfig(object state, ElapsedEventArgs e)
         {
-            Tick();
-            //for green to Yellow
-            if(fsm.GetCurrentState() == "G"){ 
-                timer.Change(greenLength, Timeout.Infinite);
+            //g to r
+            if(fsm.GetCurrentState()=="G"){
+                Tick();
+                timer.Interval = greenLength;
             }
-            //for red to green
-            else if(fsm.GetCurrentState() == "R"){  
-                timer.Change(redLength, Timeout.Infinite);
+
+            if(fsm.GetCurrentState()=="R" && !_isRed){
+                Tick();
+                timer.Interval = redLength;
             }
             else{
-                timer.Change(defaultLength, Timeout.Infinite);
+                Tick();
+                timer.Interval = defaultLength;
             }
+
         }
+        
+        
         
     }
 }
