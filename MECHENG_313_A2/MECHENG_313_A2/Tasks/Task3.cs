@@ -39,7 +39,7 @@ namespace MECHENG_313_A2.Tasks
         public override async Task<bool> EnterConfigMode()
         {
             if(fsm.GetCurrentState() != "R"){
-                SpinWait.SpinUntil(()=> (fsm.GetNextState("a")=="Y"));
+                SpinWait.SpinUntil(()=> (fsm.GetNextState("a")=="G"));
             }
 
             //Send the action associated with the trigger 
@@ -72,18 +72,18 @@ namespace MECHENG_313_A2.Tasks
 
         public void TimerConfig(object state, ElapsedEventArgs e)
         {
+            Tick();
             //g to r
             if(fsm.GetCurrentState()=="G"){
-                Tick();
+                
                 timer.Interval = greenLength;
             }
-
-            if(fsm.GetCurrentState()=="R" && !_isRed){
-                Tick();
+            else if(fsm.GetCurrentState()=="R" && !_isRed){
+            
                 timer.Interval = redLength;
             }
             else{
-                Tick();
+                
                 timer.Interval = defaultLength;
             }
 
