@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-//using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 using System.Timers;
@@ -24,8 +23,7 @@ namespace MECHENG_313_A2.Tasks
         private int greenLength = 1000;
         private int defaultLength = 1000; 
 
-        //private Timer greenTimer;
-        //private Timer redTimer;
+        private bool configRequested = false;
         static Timer timer;
 
         //IMPLEMENTATION-----------------------------------------------
@@ -40,7 +38,13 @@ namespace MECHENG_313_A2.Tasks
         public override async Task<bool> EnterConfigMode()
         {
             if (fsm.GetCurrentState() != "R"){
-                return false;
+                if ((fsm.GetCurrentState()=="Y")&&(fsm.GetCurrentState()=="G")){
+                    configRequested = true;
+                    return true;
+                }
+                else{
+                    return false;
+                }
             }
             else {
                 
@@ -79,8 +83,15 @@ namespace MECHENG_313_A2.Tasks
 
         public void Trigger (object sender, ElapsedEventArgs e)
         {
-            Tick();
-
+            if ((fsm.GetCurrentState()=="R")&&(configRequested)){
+                configRequested = false;
+                EnterConfigMode();
+                timer.Interval=defaultLength;
+            }
+            else{
+                Tick();
+            }
+           
             //Determine next interval based on the new state 
             if (fsm.GetCurrentState()=="G"){
                 timer.Interval=greenLength;
