@@ -40,7 +40,7 @@ namespace MECHENG_313_A2.Tasks
         {
             //spinlock that stalls thread if not red 
             if(fsm.GetCurrentState() != "R"){
-                SpinWait.SpinUntil(()=> (fsm.GetCurrentState()=="R"));
+                SpinWait.SpinUntil(()=> (_isRed));
                 await Task.Delay(redLength);
             }
 
@@ -81,7 +81,7 @@ namespace MECHENG_313_A2.Tasks
                 timer.Interval = greenLength;
             }
             else if(fsm.GetCurrentState()=="R" && !_isRed){
-            
+                _isRed = true;
                 timer.Interval = redLength;
             }
             else{
