@@ -172,7 +172,7 @@ namespace MECHENG_313_A2.Tasks
             _taskPage = taskPage;
         }
 
-        public async void Start()
+        public virtual async void Start()
         {
             //Add the five states to the table 
             fsm.fst.Add("G", new Dictionary<string, nextEventAction>());

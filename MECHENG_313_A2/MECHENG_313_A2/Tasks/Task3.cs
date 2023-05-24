@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
+//using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
+using System.Timers;
 
 namespace MECHENG_313_A2.Tasks
 {
@@ -23,7 +24,9 @@ namespace MECHENG_313_A2.Tasks
         private int greenLength = 1000;
         private int defaultLength = 1000; 
 
-        ConfigHelper configHelper = new ConfigHelper();
+        //private Timer greenTimer;
+        //private Timer redTimer;
+        static Timer timer;
 
         //IMPLEMENTATION-----------------------------------------------
 
@@ -36,84 +39,37 @@ namespace MECHENG_313_A2.Tasks
 
         public override async Task<bool> EnterConfigMode()
         {
-            Task waitingTask = configHelper.WaitForRedLightAsync();
-            Thread.Sleep(redLength);
-            configHelper.SetRedLight();
-            
-            if((configHelper.GetIsRed())==false){
-                return false;
-            }
-            else{
-                
-                //Send the action associated with the trigger 
-                actnB(DateTime.Now); 
 
-                //set the new current state on button press (event trigger "b")
-                fsm.SetCurrentState(fsm.GetNextState("b"));
-                LogPrint("config", "Entered Config Mode");
-
-                return true;
-            }
-            
-
-            // //Overriden to allow for input from other states as well 
-            // if (fsm.GetCurrentState() != "R"){
-            //     //If requested from green and yellow
-            //     if ((fsm.GetCurrentState() == "G") || (fsm.GetCurrentState() == "Y")){
-            //         //updates the request flag 
-            //         configRequested=true;
-            //         return false;
-            //     }
-            //     else {
-            //         return false;
-            //     }
-            // }
-            // else {
-            //     //clear the request flag 
-            //     configRequested=false;
-            //     //Send the action associated with the trigger 
-            //     actnB(DateTime.Now);
-            //     //set the new current state on button press (event trigger "b")
-            //     fsm.SetCurrentState(fsm.GetNextState("b"));
-            //     LogPrint("config", "Entered Config Mode");
-            //     return true;
-            // }
         }
 
-        
-
-    }
-
-    public class ConfigHelper
-    {
-        private SemaphoreSlim semaphore = new SemaphoreSlim (0,1);
-        private bool isRed = false; 
-
-        public async Task WaitForRedLightAsync()
+        public override async void Start()
         {
-            while(true){
-                await semaphore.WaitAsync();
-                if (isRed){
-                    break;
-                }
+            base.Start();
+            TimerConfig();
+        }
+
+        public void TimerConfig(){
+            timer = new Timer();
+            timer.Elapsed += Trigger;
+            timer.Interval = greenLength;
+            timer.AutoReset = true;
+            timer.Start();
+        }
+
+        public void Trigger (object sender, ElapsedEventArgs e)
+        {
+            Tick();
+
+            //Determine next interval based on the new state 
+            if (fsm.GetCurrentState()=="G"){
+                timer.Interval=greenLength;
             }
-        }
-
-        public void SetRedLight()
-        {
-            isRed = true;
-            semaphore.Release();
-        }
-
-        public void SetGreenLight()
-        {
-            isRed = false;
-        }
-
-        public bool GetIsRed(){
-            return this.isRed;
+            else if (fsm.GetCurrentState()=="R"){
+                timer.Interval=redLength;
+            }
+            else {
+                timer.Interval=defaultLength;
+            }
         }
     }
-
-    
 }
