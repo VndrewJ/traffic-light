@@ -23,6 +23,16 @@ namespace MECHENG_313_A2.Tasks
         TaskNumber TaskNumber { get; }
 
         /// <summary>
+        /// Do the associated actions with trigger 'a' (tick)
+        /// </summary>
+        void ActionA(DateTime timestamp); 
+
+        /// <summary>
+        /// Do the associated actions with trigger 'b' (config)
+        /// </summary>
+        void ActionB(DateTime timestamp); 
+
+        /// <summary>
         /// Configures the length of the red and green lights (in ms), only used in Task 3.
         /// </summary>
         void ConfigLightLength(int redLength, int greenLength);

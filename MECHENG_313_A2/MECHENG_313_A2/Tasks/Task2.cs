@@ -10,22 +10,26 @@ namespace MECHENG_313_A2.Tasks
     internal class Task2 : IController
     {   
         /*-------------------SETUP-------------------*/
-        //Initiate serial interface
+        //Instantiate serial interface
         protected MECHENG_313_A2.Serial.MockSerialInterface serial = new MECHENG_313_A2.Serial.MockSerialInterface();
 
-        //initiate StreamWriter to write to log 
+        //declare StreamWriter to write to log 
         protected StreamWriter write;
 
-        //-------Set up FST----------
-        protected FiniteStateMachine fsm = new FiniteStateMachine("G"); //create new FST, set current state as green
+        //-------Set up FST--------//
+        //instantiate new FST, set initial state as green
+        protected FiniteStateMachine fsm = new FiniteStateMachine("G"); 
         
-        public async void actnA(DateTime timestamp) 
+        public async void ActionA(DateTime timestamp) 
         { 
-            if (fsm.GetCurrentState() == "G"){
-                //1. send serial command to microcontroller (done)
-                //2. write a log entry to file for the event trigger 
-                //3. Update the traffic light state on the gui (done)
-                
+            /*---Sequence of actions---
+            * 1. Check current state 
+            * 2. Change to next state on serial
+            * 3. Change traffic light state on GUI
+            * 4. Log and print on GUI
+            */
+
+            if (fsm.GetCurrentState() == "G"){                
                 await serial.SetState(TrafficLightState.Yellow);
                 _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
                 LogPrint("Tick", "Yellow");
@@ -57,8 +61,9 @@ namespace MECHENG_313_A2.Tasks
             }
         }
 
-        public async void actnB(DateTime timestamp) 
+        public async void ActionB(DateTime timestamp) 
         { 
+            // Same sequence of actions as actnA but with trigger 'b'
             if (fsm.GetCurrentState() == "R"){
                 await serial.SetState(TrafficLightState.Yellow);
                 _taskPage.SetTrafficLightState(TrafficLightState.Yellow);
@@ -92,13 +97,14 @@ namespace MECHENG_313_A2.Tasks
 
         public virtual async Task<bool> EnterConfigMode()
         {
+            //Do nothing if not in Red state
             if (fsm.GetCurrentState() != "R"){
                 return false;
             }
             else {
                 
                 //Send the action associated with the trigger 
-                actnB(DateTime.Now);
+                ActionB(DateTime.Now);
 
                 //set the new current state on button press (event trigger "b")
                 fsm.SetCurrentState(fsm.GetNextState("b"));
@@ -112,7 +118,7 @@ namespace MECHENG_313_A2.Tasks
         {
             if ((fsm.GetCurrentState() == "Y'") || (fsm.GetCurrentState() == "B")){
                 //Send the action associated with the trigger 
-                actnB(DateTime.Now);
+                ActionB(DateTime.Now);
 
                 //set the new current state on button press (event trigger "b")
                 fsm.SetCurrentState(fsm.GetNextState("b"));
@@ -129,9 +135,6 @@ namespace MECHENG_313_A2.Tasks
         {   
             //find file path
             string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "log.txt");
-            //debug 
-            _taskPage.AddLogEntry(filePath);
-            //it does create a file, can't enter the if conditional however. 
 
             //check if file exists
             if(File.Exists(filePath)){
@@ -163,7 +166,7 @@ namespace MECHENG_313_A2.Tasks
 
         public async Task<bool> OpenPort(string serialPort, int baudRate)
         {
-            
+            //open the selected port at the selected baudRate
             return await serial.OpenPort(serialPort, baudRate);
         }
 
@@ -194,8 +197,8 @@ namespace MECHENG_313_A2.Tasks
             //Add actions (AddAction)
             TimestampedAction actionA;
             TimestampedAction actionB;
-            actionA = actnA;
-            actionB = actnB;
+            actionA = ActionA;
+            actionB = ActionB;
             fsm.AddAction("G", "a", actionA);
             fsm.AddAction("Y", "a", actionA);
             fsm.AddAction("R", "a", actionA);
@@ -223,8 +226,8 @@ namespace MECHENG_313_A2.Tasks
 
         public virtual void Tick()
         {
-            //Call action a
-            actnA(DateTime.Now);
+            //Call action 'a'
+            ActionA(DateTime.Now);
             
             //set the new current state on button press (event trigger "a")
             fsm.SetCurrentState(fsm.GetNextState("a"));
