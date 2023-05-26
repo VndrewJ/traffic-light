@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace MECHENG_313_A2.Tasks
 {
@@ -243,6 +244,11 @@ namespace MECHENG_313_A2.Tasks
             write.WriteLine(DateTime.Now + " " + eventTrigger + " " + state);
             write.Flush();
             _taskPage.AddLogEntry(DateTime.Now + " " + eventTrigger + " " + state);
+        }
+
+        public void TimerConfig(object state, ElapsedEventArgs e)
+        {
+            //Does nothing in task 2
         }
     }
 }

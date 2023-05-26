@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace MECHENG_313_A2.Tasks
 {
@@ -122,5 +123,11 @@ namespace MECHENG_313_A2.Tasks
         /// Prints to gui the event trigger and new state + dateTime
         /// </summary>
         void LogPrint(string eventTrigger, string state);
+
+        /// <summary>
+        /// For task 3
+        /// Adjusts the timer length according to the light length settings
+        /// </summary>
+        void TimerConfig(object state, ElapsedEventArgs e);
     }
 }
