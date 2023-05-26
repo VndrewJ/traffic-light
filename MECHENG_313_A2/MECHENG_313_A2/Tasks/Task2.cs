@@ -175,21 +175,21 @@ namespace MECHENG_313_A2.Tasks
         public virtual async void Start()
         {
             //Add the five states to the table 
-            fsm.fst.Add("G", new Dictionary<string, nextEventAction>());
-            fsm.fst.Add("Y", new Dictionary<string, nextEventAction>());
-            fsm.fst.Add("R", new Dictionary<string, nextEventAction>());
-            fsm.fst.Add("Y'", new Dictionary<string, nextEventAction>());
-            fsm.fst.Add("B", new Dictionary<string, nextEventAction>());
+            fsm.fst.Add("G", new Dictionary<string, NextEventAction>());
+            fsm.fst.Add("Y", new Dictionary<string, NextEventAction>());
+            fsm.fst.Add("R", new Dictionary<string, NextEventAction>());
+            fsm.fst.Add("Y'", new Dictionary<string, NextEventAction>());
+            fsm.fst.Add("B", new Dictionary<string, NextEventAction>());
 
             //Add the event triggers 
-            fsm.fst["G"].Add("a", new nextEventAction(null));
-            fsm.fst["Y"].Add("a", new nextEventAction(null));
-            fsm.fst["R"].Add("a", new nextEventAction(null));
-            fsm.fst["R"].Add("b", new nextEventAction(null));
-            fsm.fst["Y'"].Add("a", new nextEventAction(null));
-            fsm.fst["Y'"].Add("b", new nextEventAction(null));
-            fsm.fst["B"].Add("a", new nextEventAction(null));
-            fsm.fst["B"].Add("b", new nextEventAction(null));
+            fsm.fst["G"].Add("a", new NextEventAction(null));
+            fsm.fst["Y"].Add("a", new NextEventAction(null));
+            fsm.fst["R"].Add("a", new NextEventAction(null));
+            fsm.fst["R"].Add("b", new NextEventAction(null));
+            fsm.fst["Y'"].Add("a", new NextEventAction(null));
+            fsm.fst["Y'"].Add("b", new NextEventAction(null));
+            fsm.fst["B"].Add("a", new NextEventAction(null));
+            fsm.fst["B"].Add("b", new NextEventAction(null));
 
             //Add actions (AddAction)
             TimestampedAction actionA;

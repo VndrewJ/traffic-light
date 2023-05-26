@@ -45,4 +45,28 @@ namespace MECHENG_313_A2.Tasks
         /// <returns>The name of the next state, or null otherwise.</returns>
         string ProcessEvent(string eventTrigger);
     }
+
+    /// Class that contains the next state and list of actions
+    internal interface INextEventAction
+    {
+        /// <summary>
+        /// sets the next state
+        /// </summary>
+        void setNextState(string nextState);
+
+        /// <summary>
+        /// returns the next state
+        /// </summary>
+        string getNextState();
+
+        /// <summary>
+        /// adds a new entry to the action list
+        /// </summary>
+        void actionAdd(TimestampedAction newAction);
+
+        /// <summary>
+        /// returns the entire list of actions
+        /// </summary>
+        List<TimestampedAction> getAction();
+    }
 }

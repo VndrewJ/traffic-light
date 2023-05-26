@@ -8,20 +8,20 @@ namespace MECHENG_313_A2.Tasks
 {
     public class FiniteStateMachine : IFiniteStateMachine
     {
-        // create nested dictionary for FST 
-        // First string for current event 
-        // second string for event trigger 
+        // Declare Finite State Table 
+        // 1st string for current event 
+        // 2nd string for event trigger 
         // object for next state and a list of actions 
-        public Dictionary<string, Dictionary<string, nextEventAction>> fst; 
+        public Dictionary<string, Dictionary<string, NextEventAction>> fst; 
         
         //Declare current state varible
-        private string currentState;
+        private string _currentState;
         //--------------------------------------------------------------------------------------//
 
-        //constructor 
-        public FiniteStateMachine(string currentState){
-            SetCurrentState(currentState);
-            fst = new Dictionary<string, Dictionary<string, nextEventAction>>();
+        //FST constructor 
+        public FiniteStateMachine(string _currentState){
+            SetCurrentState(_currentState);
+            fst = new Dictionary<string, Dictionary<string, NextEventAction>>();
         }
 
         public void AddAction(string state, string eventTrigger, TimestampedAction action)
@@ -36,7 +36,7 @@ namespace MECHENG_313_A2.Tasks
 
         public string GetCurrentState()
         {
-            return currentState;
+            return _currentState;
         }
 
         public string ProcessEvent(string eventTrigger)
@@ -45,16 +45,17 @@ namespace MECHENG_313_A2.Tasks
             List<Task> runningTasks = new List<Task>();
 
             //iterate through list of tasks and run each in parallel
-            foreach(TimestampedAction action in fst[currentState][eventTrigger].actionList){
+            foreach(TimestampedAction action in fst[_currentState][eventTrigger].actionList){
                 runningTasks.Add(Task.Run(()=>action(DateTime.Now)));
             }
 
-            return fst[currentState][eventTrigger].getNextState();
+            //return next state
+            return fst[_currentState][eventTrigger].getNextState();
         }
 
         public void SetCurrentState(string state)
         {
-            this.currentState = state;
+            this._currentState = state;
         }
 
         public void SetNextState(string state, string nextState, string eventTrigger)
@@ -69,34 +70,41 @@ namespace MECHENG_313_A2.Tasks
 
         public string GetNextState(string eventTrigger)
         {
-            return fst[currentState][eventTrigger].getNextState();
+            return fst[_currentState][eventTrigger].getNextState();
         }
     }
 
-    public class nextEventAction
+    /*--------- NextEventAction Class ---------*/
+    /*
+    * Contains the next state and list of actions
+    */
+    public class NextEventAction: INextEventAction
     {
-        //variables
+        // Declare variables
         private string nextState;
         public List<TimestampedAction> actionList;
 
-        //Constructor 
-        public nextEventAction(string nextState){
+        //Constructor that sets next state and initialises action list
+        public NextEventAction(string nextState){
             setNextState(nextState);
             actionList = new List<TimestampedAction>();
         }
         
-        //Methods 
+        /*----Methods----*/ 
         public void setNextState(string nextState){
             this.nextState=nextState;
         }
+
         public string getNextState(){
             return nextState;
         }
+
         public void actionAdd(TimestampedAction newAction)
         {
             actionList.Add(newAction);
             return; 
         }
+
         public List<TimestampedAction> getAction(){
             return actionList;
         }
