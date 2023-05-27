@@ -62,11 +62,11 @@ namespace MECHENG_313_A2.Tasks
         /// <summary>
         /// adds a new entry to the action list
         /// </summary>
-        void actionAdd(TimestampedAction newAction);
+        void ActionAdd(TimestampedAction newAction);
 
         /// <summary>
         /// returns the entire list of actions
         /// </summary>
-        List<TimestampedAction> getAction();
+        List<TimestampedAction> GetAction();
     }
 }

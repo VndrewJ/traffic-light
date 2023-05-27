@@ -30,7 +30,7 @@ namespace MECHENG_313_A2.Tasks
             if (fst.ContainsKey(state) && fst[state].ContainsKey(eventTrigger))
             {   
                 //set the next action
-                fst[state][eventTrigger].actionAdd(action);
+                fst[state][eventTrigger].ActionAdd(action);
             }
         }
 
@@ -81,7 +81,7 @@ namespace MECHENG_313_A2.Tasks
     public class NextEventAction: INextEventAction
     {
         // Declare variables
-        private string nextState;
+        private string _nextState;
         public List<TimestampedAction> actionList;
 
         //Constructor that sets next state and initialises action list
@@ -92,20 +92,20 @@ namespace MECHENG_313_A2.Tasks
         
         /*----Methods----*/ 
         public void setNextState(string nextState){
-            this.nextState=nextState;
+            this._nextState=nextState;
         }
 
         public string getNextState(){
-            return nextState;
+            return _nextState;
         }
 
-        public void actionAdd(TimestampedAction newAction)
+        public void ActionAdd(TimestampedAction newAction)
         {
             actionList.Add(newAction);
             return; 
         }
 
-        public List<TimestampedAction> getAction(){
+        public List<TimestampedAction> GetAction(){
             return actionList;
         }
     }
