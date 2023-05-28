@@ -122,7 +122,7 @@ namespace MECHENG_313_A2.Tasks
         /// Prints to serial.output the event trigger and new state + dateTime
         /// Prints to gui the event trigger and new state + dateTime
         /// </summary>
-        void LogPrint(string eventTrigger, string state);
+        void LogPrint(string eventTrigger, string state, string filePath);
 
         /// <summary>
         /// For task 3

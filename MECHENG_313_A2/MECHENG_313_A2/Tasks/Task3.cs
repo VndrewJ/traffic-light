@@ -47,7 +47,7 @@ namespace MECHENG_313_A2.Tasks
 
             //set the new current state on button press (event trigger "b")
             fsm.SetCurrentState(fsm.GetNextState("b"));
-            LogPrint("config", "Entered Config Mode");
+            LogPrint("config", "Entered Config Mode", filePath);
 
             return true;
         }
